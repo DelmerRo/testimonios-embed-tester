@@ -6,249 +6,932 @@
     <title>Test Embed - Testimonios CMS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ESTILOS SIMPLIFICADOS PARA GITHUB PAGES */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
-        .header { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 30px; text-align: center; }
-        .header h1 { font-size: 2rem; margin-bottom: 10px; }
-        .main-content { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
-        @media (max-width: 768px) { .main-content { grid-template-columns: 1fr; } }
-        .input-section, .output-section { padding: 30px; }
-        .input-section { background: #f8fafc; border-right: 1px solid #e2e8f0; }
-        textarea, input { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; margin: 10px 0; font-family: 'Courier New', monospace; }
-        textarea { height: 250px; resize: vertical; }
-        button { background: #4f46e5; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; margin: 5px; font-weight: 600; }
-        button:hover { background: #4338ca; }
-        .preview-container { border: 2px solid #e2e8f0; border-radius: 8px; padding: 20px; min-height: 300px; background: white; margin: 20px 0; }
-        .error { background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #dc2626; }
-        .success { background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #059669; }
-        .loading { text-align: center; padding: 20px; color: #64748b; }
-        .stats { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
-        .stat-item { background: #f1f5f9; padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; }
-        .footer { text-align: center; padding: 20px; background: #f1f5f9; color: #64748b; font-size: 0.9rem; }
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .vercel-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 700px;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .input-section {
+            padding: 40px;
+            background: var(--light);
+            border-right: 1px solid #e2e8f0;
+        }
+        
+        .output-section {
+            padding: 40px;
+        }
+        
+        .section-title {
+            color: var(--dark);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions {
+            background: #e0e7ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .input-with-button {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            resize: vertical;
+            transition: border-color 0.3s;
+            margin-bottom: 15px;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .btn-success {
+            background: var(--secondary);
+        }
+        
+        .btn-success:hover {
+            background: #0da271;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background: #d97706;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .btn-secondary {
+            background: #64748b;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+        }
+        
+        .buttons-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        
+        .preview-container {
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 30px;
+            min-height: 400px;
+            overflow: auto;
+            background: white;
+            margin-bottom: 20px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            border-color: var(--danger);
+            color: #dc2626;
+        }
+        
+        .alert-success {
+            background: #d1fae5;
+            border-color: var(--secondary);
+            color: #059669;
+        }
+        
+        .example-ids {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .example-ids h4 {
+            color: #475569;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .example-ids code {
+            background: #e2e8f0;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        .example-ids code:hover {
+            background: #cbd5e1;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            background: #f8fafc;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            min-width: 150px;
+        }
+        
+        .stat-item strong {
+            color: #1e293b;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            color: #64748b;
+        }
+        
+        .code-display {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .api-info {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-code"></i> Test Embed - Testimonios CMS</h1>
-            <p>Prueba tus embeds con HTTPS para evitar CORS</p>
-            <p style="font-size: 0.9rem; margin-top: 10px; background: rgba(255,255,255,0.2); padding: 5px; border-radius: 5px;">
-                <i class="fas fa-shield-alt"></i> HTTPS activo - Sin problemas CORS
-            </p>
+            <div class="vercel-badge">
+                <i class="fab fa-vercel"></i> Desplegado en Vercel
+            </div>
+            <h1><i class="fas fa-code"></i> Probador de Embeds</h1>
+            <p>Testimonios CMS - Página de prueba con HTTPS activo</p>
+            <div style="margin-top: 15px; display: inline-flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">
+                    <i class="fas fa-shield-alt"></i> CORS Configurado
+                </span>
+                <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">
+                    <i class="fas fa-bolt"></i> HTTPS Automático
+                </span>
+            </div>
         </div>
-        
+
         <div class="main-content">
+            <!-- Sección de entrada -->
             <div class="input-section">
-                <h2><i class="fas fa-keyboard"></i> Obtener Código</h2>
-                <div class="instructions" style="background: #e0e7ff; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                    <p><strong>Instrucciones:</strong></p>
-                    <ol style="margin-left: 20px;">
-                        <li>Pega un ID de testimonio</li>
-                        <li>Obtén el código HTML</li>
-                        <li>Pégalo abajo</li>
-                        <li>Vélo renderizado</li>
+                <h2 class="section-title"><i class="fas fa-keyboard"></i> Obtener Código</h2>
+                
+                <div class="instructions">
+                    <h4><i class="fas fa-info-circle"></i> Instrucciones:</h4>
+                    <ol>
+                        <li><strong>Ingresa un ID de testimonio</strong> (formato UUID)</li>
+                        <li><strong>Obtén el código HTML</strong> desde tu API</li>
+                        <li><strong>Copia y pega</strong> el código en el área de texto</li>
+                        <li><strong>Visualiza</strong> el testimonio renderizado</li>
                     </ol>
                 </div>
-                
-                <label><i class="fas fa-id-card"></i> ID del Testimonio:</label>
-                <div style="display: flex; gap: 10px; margin: 10px 0;">
-                    <input type="text" id="testimonialId" placeholder="Ej: d21055bc-2a35-4658-9ce9-8cd7971b05d0">
-                    <button onclick="getEmbedCode()"><i class="fas fa-download"></i> Obtener</button>
-                    <button onclick="openManualUrl()" style="background: #f59e0b;"><i class="fas fa-external-link-alt"></i> Abrir URL</button>
+
+                <div class="form-group">
+                    <label><i class="fas fa-id-card"></i> ID del Testimonio:</label>
+                    <div class="input-with-button">
+                        <input type="text" id="testimonialId" placeholder="Ej: d21055bc-2a35-4658-9ce9-8cd7971b05d0">
+                        <button onclick="getEmbedCode()">
+                            <i class="fas fa-download"></i> Obtener Código
+                        </button>
+                        <button class="btn-warning" onclick="openManualUrl()">
+                            <i class="fas fa-external-link-alt"></i> Abrir URL
+                        </button>
+                    </div>
                 </div>
-                
-                <label><i class="fas fa-code"></i> HTML del Embed:</label>
-                <textarea id="htmlCode" placeholder="Pega el código HTML aquí..."></textarea>
-                <div>
-                    <button onclick="renderHtml()"><i class="fas fa-play"></i> Renderizar HTML</button>
-                    <button onclick="copyToClipboard()" style="background: #10b981;"><i class="far fa-copy"></i> Copiar</button>
-                    <button onclick="clearCode()" style="background: #ef4444;"><i class="fas fa-trash"></i> Limpiar</button>
-                </div>
-            </div>
-            
-            <div class="output-section">
-                <h2><i class="fas fa-eye"></i> Vista Previa</h2>
-                <div class="loading" id="loading" style="display: none;">
-                    <i class="fas fa-spinner fa-spin"></i> Cargando...
-                </div>
-                <div id="errorMessage" class="error" style="display: none;"></div>
-                <div id="successMessage" class="success" style="display: none;"></div>
-                <button onclick="toggleView()" style="background: #64748b; width: 100%; margin: 10px 0;">
-                    <i class="fas fa-exchange-alt"></i> Cambiar Vista
-                </button>
-                <div id="codeDisplay" style="display: none; background: #1e293b; color: white; padding: 15px; border-radius: 8px; font-family: monospace; max-height: 300px; overflow: auto;"></div>
-                <div id="previewContainer" class="preview-container">
-                    <p style="text-align: center; color: #94a3b8; padding: 40px 20px;">
-                        <i class="fas fa-code fa-3x" style="margin-bottom: 15px;"></i><br>
-                        La vista previa aparecerá aquí
+
+                <div class="example-ids">
+                    <h4><i class="fas fa-lightbulb"></i> IDs de prueba:</h4>
+                    <code onclick="useExampleId('d21055bc-2a35-4658-9ce9-8cd7971b05d0')">
+                        d21055bc-2a35-4658-9ce9-8cd7971b05d0
+                    </code>
+                    <code onclick="useExampleId('b6f81e7c-d6a9-4d32-93d0-af7612041a43')">
+                        b6f81e7c-d6a9-4d32-93d0-af7612041a43
+                    </code>
+                    <p style="margin-top: 10px; color: #64748b; font-size: 0.85rem;">
+                        <i class="fas fa-info-circle"></i> Usa estos IDs si tienes testimonios aprobados
                     </p>
                 </div>
-                <div class="stats" id="stats"></div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-code"></i> HTML del Embed:</label>
+                    <textarea id="htmlCode" placeholder="Pega aquí el código HTML que obtuviste de la API..."></textarea>
+                    <div class="buttons-row">
+                        <button class="btn-success" onclick="copyToClipboard()">
+                            <i class="far fa-copy"></i> Copiar HTML
+                        </button>
+                        <button class="btn-danger" onclick="clearCode()">
+                            <i class="fas fa-trash"></i> Limpiar Todo
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button onclick="renderHtml()" style="width: 100%; padding: 18px; font-size: 1.1rem;">
+                        <i class="fas fa-play"></i> Renderizar HTML
+                    </button>
+                </div>
+
+                <div class="api-info">
+                    <strong><i class="fas fa-server"></i> API Endpoint:</strong><br>
+                    <code>GET https://nocountry-cms.onrender.com/api/v1/public/embeds/{id}/code</code>
+                </div>
+            </div>
+
+            <!-- Sección de salida -->
+            <div class="output-section">
+                <h2 class="section-title"><i class="fas fa-eye"></i> Vista Previa</h2>
+                
+                <div class="loading" id="loading">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                    <p style="margin-top: 15px;">Obteniendo código HTML...</p>
+                </div>
+
+                <div id="errorMessage" class="alert alert-error" style="display: none;"></div>
+                <div id="successMessage" class="alert alert-success" style="display: none;"></div>
+
+                <button class="btn-secondary" onclick="toggleView()" style="width: 100%; margin-bottom: 20px;">
+                    <i class="fas fa-exchange-alt"></i> <span id="viewToggleText">Ver Código HTML</span>
+                </button>
+
+                <div id="codeDisplay" class="code-display" style="display: none;">
+                    {/* El código HTML aparecerá aquí */}
+                </div>
+
+                <div id="previewContainer" class="preview-container">
+                    <div style="text-align: center; color: #94a3b8; padding: 60px 20px;">
+                        <i class="fas fa-code fa-3x" style="margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 15px;">Vista previa del testimonio</h3>
+                        <p>El testimonio aparecerá aquí cuando obtengas y renderices el código HTML</p>
+                    </div>
+                </div>
+
+                <div class="stats" id="stats">
+                    {/* Las estadísticas aparecerán aquí */}
+                </div>
             </div>
         </div>
-        
+
         <div class="footer">
-            <p><i class="fas fa-globe"></i> Alojado en GitHub Pages con HTTPS</p>
-            <p>API: <code>https://nocountry-cms.onrender.com/api/v1/public</code></p>
+            <p><strong><i class="fas fa-globe"></i> Testimonios CMS - Probador de Embeds</strong></p>
+            <p>API Backend: <code>https://nocountry-cms.onrender.com/api/v1</code></p>
+            <p style="margin-top: 10px; font-size: 0.9rem; color: #94a3b8;">
+                <i class="fas fa-sync-alt"></i> CORS Configurado | 
+                <i class="fab fa-vercel"></i> Desplegado en Vercel | 
+                <i class="fas fa-shield-alt"></i> HTTPS Activo
+            </p>
         </div>
     </div>
 
     <script>
         // ========== CONFIGURACIÓN ==========
         const API_BASE_URL = 'https://nocountry-cms.onrender.com/api/v1/public';
-        let currentView = 'preview';
+        let currentView = 'preview'; // 'preview' o 'code'
         
-        // ========== ELEMENTOS DOM ==========
-        const elements = {
-            loading: document.getElementById('loading'),
-            error: document.getElementById('errorMessage'),
-            success: document.getElementById('successMessage'),
-            preview: document.getElementById('previewContainer'),
-            code: document.getElementById('codeDisplay'),
-            textarea: document.getElementById('htmlCode'),
-            stats: document.getElementById('stats'),
-            input: document.getElementById('testimonialId')
-        };
+        // ========== ELEMENTOS DEL DOM ==========
+        const loadingElement = document.getElementById('loading');
+        const errorElement = document.getElementById('errorMessage');
+        const successElement = document.getElementById('successMessage');
+        const previewContainer = document.getElementById('previewContainer');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const htmlCodeTextarea = document.getElementById('htmlCode');
+        const statsElement = document.getElementById('stats');
+        const testimonialIdInput = document.getElementById('testimonialId');
+        const viewToggleText = document.getElementById('viewToggleText');
         
-        // ========== FUNCIONES ==========
+        // ========== FUNCIONES AUXILIARES ==========
+        
+        // Validar formato UUID
         function isValidUUID(uuid) {
-            return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(uuid);
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+            return uuidRegex.test(uuid);
         }
         
+        // Mostrar carga
         function showLoading(show) {
-            elements.loading.style.display = show ? 'block' : 'none';
+            loadingElement.classList.toggle('active', show);
         }
         
-        function showMessage(text, type) {
-            elements.error.style.display = 'none';
-            elements.success.style.display = 'none';
+        // Mostrar mensajes
+        function showMessage(message, type) {
+            clearMessages();
             
-            const element = type === 'error' ? elements.error : elements.success;
-            element.innerHTML = text;
-            element.style.display = 'block';
+            const messageElement = type === 'error' ? errorElement : successElement;
+            messageElement.innerHTML = message;
+            messageElement.style.display = 'block';
             
             if (type === 'success') {
-                setTimeout(() => element.style.display = 'none', 5000);
+                setTimeout(() => {
+                    successElement.style.display = 'none';
+                }, 5000);
             }
         }
         
+        // Limpiar mensajes
+        function clearMessages() {
+            errorElement.style.display = 'none';
+            successElement.style.display = 'none';
+        }
+        
+        // ========== FUNCIONES PRINCIPALES ==========
+        
+        // Usar ID de ejemplo
+        function useExampleId(id) {
+            testimonialIdInput.value = id;
+            showMessage(`✅ ID de ejemplo cargado: ${id}`, 'success');
+        }
+        
+        // Abrir URL manualmente (para evitar problemas de CORS)
         function openManualUrl() {
-            const id = elements.input.value.trim();
-            if (!id || !isValidUUID(id)) {
-                showMessage('Ingresa un ID válido', 'error');
+            const testimonialId = testimonialIdInput.value.trim();
+            
+            if (!testimonialId) {
+                showMessage('❌ Por favor, ingresa un ID de testimonio', 'error');
                 return;
             }
-            window.open(`${API_BASE_URL}/embeds/${id}/code`, '_blank');
-            showMessage('URL abierta en nueva pestaña. Copia el HTML y pégalo arriba.', 'success');
+            
+            if (!isValidUUID(testimonialId)) {
+                showMessage('❌ El ID debe tener formato UUID válido', 'error');
+                return;
+            }
+            
+            const url = `${API_BASE_URL}/embeds/${testimonialId}/code`;
+            window.open(url, '_blank');
+            
+            showMessage(
+                `✅ URL abierta en nueva pestaña<br>
+                <strong>Instrucciones:</strong><br>
+                1. Copia TODO el HTML de la nueva pestaña<br>
+                2. Pégalo en el área de texto de la izquierda<br>
+                3. Haz clic en "Renderizar HTML"`, 
+                'success'
+            );
         }
         
+        // Obtener código HTML de la API
         async function getEmbedCode() {
-            const id = elements.input.value.trim();
-            if (!id || !isValidUUID(id)) {
-                showMessage('ID inválido. Formato: 8-4-4-4-12 caracteres hex', 'error');
+            const testimonialId = testimonialIdInput.value.trim();
+            
+            if (!testimonialId) {
+                showMessage('❌ Por favor, ingresa un ID de testimonio', 'error');
+                return;
+            }
+            
+            if (!isValidUUID(testimonialId)) {
+                showMessage(
+                    '❌ Formato de ID inválido<br>' +
+                    'Debe ser un UUID como: <code>d21055bc-2a35-4658-9ce9-8cd7971b05d0</code>', 
+                    'error'
+                );
                 return;
             }
             
             showLoading(true);
+            clearMessages();
+            
             try {
-                const response = await fetch(`${API_BASE_URL}/embeds/${id}/code`);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                console.log(`🔍 Solicitando código para ID: ${testimonialId}`);
+                
+                // Realizar la petición a la API
+                const response = await fetch(`${API_BASE_URL}/embeds/${testimonialId}/code`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'text/html',
+                        'Content-Type': 'text/html'
+                    }
+                });
+                
+                console.log(`📊 Respuesta HTTP: ${response.status} ${response.statusText}`);
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('Testimonio no encontrado. Verifica que:<br>• El ID sea correcto<br>• El testimonio esté aprobado<br>• Exista en la base de datos');
+                    } else if (response.status === 403) {
+                        throw new Error('Acceso denegado. El testimonio podría no estar aprobado para visualización pública.');
+                    }
+                    throw new Error(`Error HTTP ${response.status}: ${response.statusText}`);
+                }
                 
                 const html = await response.text();
-                elements.textarea.value = html;
+                
+                // Verificar que la respuesta no esté vacía
+                if (!html || html.trim().length === 0) {
+                    throw new Error('La respuesta de la API está vacía. El testimonio podría no tener contenido.');
+                }
+                
+                // Mostrar el HTML en el textarea
+                htmlCodeTextarea.value = html;
+                
+                // Renderizar automáticamente
                 renderHtml();
-                showMessage(`Código obtenido para: ${id}`, 'success');
+                
+                // Mostrar mensaje de éxito
+                showMessage(`✅ Código HTML obtenido exitosamente para ID: ${testimonialId}`, 'success');
+                
+                // Obtener estadísticas adicionales del testimonio
+                getTestimonialStats(testimonialId);
+                
             } catch (error) {
-                showMessage(`Error: ${error.message}. Usa "Abrir URL" para copiar manualmente.`, 'error');
+                console.error('❌ Error obteniendo embed code:', error);
+                
+                // Manejar errores de CORS específicamente
+                if (error.message.includes('Failed to fetch') || error.message.includes('CORS') || error.message.includes('NetworkError')) {
+                    showMessage(
+                        `❌ <strong>Error de CORS detectado</strong><br><br>
+                        <strong>¿Qué significa?</strong><br>
+                        Tu navegador está bloqueando la conexión por seguridad.<br><br>
+                        
+                        <strong>Soluciones:</strong><br>
+                        1. <strong>Usa la opción "Abrir URL"</strong> arriba (recomendado)<br>
+                        2. <strong>Configura CORS en tu backend NestJS:</strong><br>
+                        <code style="background:#1e293b;color:#e2e8f0;padding:8px;border-radius:5px;display:block;margin:5px 0;font-size:0.9rem;">
+                        // En src/main.ts<br>
+                        app.enableCors({<br>
+                        &nbsp;&nbsp;origin: ['https://testimonios-embed-tester.vercel.app'],<br>
+                        &nbsp;&nbsp;methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS'<br>
+                        });
+                        </code>`, 
+                        'error'
+                    );
+                } else {
+                    showMessage(`❌ Error: ${error.message}`, 'error');
+                }
             } finally {
                 showLoading(false);
             }
         }
         
+        // Renderizar el HTML en la vista previa
         function renderHtml() {
-            const html = elements.textarea.value.trim();
+            const html = htmlCodeTextarea.value.trim();
+            
             if (!html) {
-                showMessage('No hay código para renderizar', 'error');
+                showMessage('❌ No hay código HTML para renderizar', 'error');
                 return;
             }
             
-            elements.preview.innerHTML = '';
-            elements.code.textContent = html;
+            clearMessages();
             
-            const div = document.createElement('div');
-            div.innerHTML = html;
-            div.style.maxWidth = '100%';
-            div.style.margin = '0 auto';
-            elements.preview.appendChild(div);
-            
-            if (currentView === 'code') toggleView();
-            extractInfo(div);
-            showMessage('HTML renderizado', 'success');
-        }
-        
-        function extractInfo(element) {
             try {
-                const embed = element.querySelector('.testimonial-embed');
-                if (!embed) return;
+                // Limpiar el contenedor de vista previa
+                previewContainer.innerHTML = '';
                 
-                const info = {
-                    id: embed.dataset.testimonialId || 'N/A',
-                    author: embed.dataset.author || 'N/A',
-                    title: embed.dataset.testimonialTitle || 'N/A',
-                    category: embed.dataset.category || 'N/A'
-                };
+                // Mostrar el código en el display
+                codeDisplay.textContent = html;
                 
-                elements.stats.innerHTML = `
-                    <div class="stat-item">ID: ${info.id.substring(0, 8)}...</div>
-                    <div class="stat-item">Autor: ${info.author}</div>
-                    <div class="stat-item">Categoría: ${info.category}</div>
-                    <div class="stat-item">Tamaño: ${elements.textarea.value.length} chars</div>
-                `;
-            } catch (e) {
-                console.log('Error extrayendo info:', e);
+                // Crear un div para el embed
+                const embedDiv = document.createElement('div');
+                embedDiv.innerHTML = html;
+                
+                // Añadir estilos adicionales para mejor visualización
+                embedDiv.style.maxWidth = '100%';
+                embedDiv.style.margin = '0 auto';
+                
+                // Agregar al contenedor de vista previa
+                previewContainer.appendChild(embedDiv);
+                
+                // Asegurarse de que se muestre la vista previa
+                if (currentView === 'code') {
+                    toggleView();
+                }
+                
+                // Extraer información del testimonio del HTML
+                extractTestimonialInfo(embedDiv);
+                
+                // Mostrar mensaje de éxito
+                showMessage('✅ HTML renderizado exitosamente', 'success');
+                
+            } catch (error) {
+                showMessage(`❌ Error al renderizar HTML: ${error.message}`, 'error');
+                console.error('Error renderizando HTML:', error);
             }
         }
         
+        // Extraer información del testimonio del HTML
+        function extractTestimonialInfo(embedDiv) {
+            try {
+                // Buscar el elemento principal del testimonio
+                const testimonialElement = embedDiv.querySelector('.testimonial-embed');
+                
+                if (!testimonialElement) {
+                    statsElement.innerHTML = `
+                        <div class="stat-item">
+                            <strong><i class="fas fa-info-circle"></i> Formato:</strong>
+                            HTML personalizado
+                        </div>
+                        <div class="stat-item">
+                            <strong><i class="fas fa-file-code"></i> Tamaño:</strong>
+                            ${htmlCodeTextarea.value.length.toLocaleString()} caracteres
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Extraer información de los atributos data-*
+                const testimonialId = testimonialElement.dataset.testimonialId || 'N/A';
+                const title = testimonialElement.dataset.testimonialTitle || 'N/A';
+                const author = testimonialElement.dataset.author || 'N/A';
+                const category = testimonialElement.dataset.category || 'N/A';
+                const mediaType = testimonialElement.dataset.mediaType || 'N/A';
+                
+                // Detectar tipos de multimedia
+                const hasVideo = embedDiv.querySelector('iframe, video') !== null;
+                const hasImage = embedDiv.querySelector('img') !== null;
+                const hasAudio = embedDiv.querySelector('audio') !== null;
+                
+                // Determinar tipo de media principal
+                let detectedMediaType = 'texto';
+                if (hasVideo) detectedMediaType = 'video';
+                else if (hasImage) detectedMediaType = 'imagen';
+                else if (hasAudio) detectedMediaType = 'audio';
+                
+                // Actualizar estadísticas
+                statsElement.innerHTML = `
+                    <div class="stat-item">
+                        <strong><i class="fas fa-id-card"></i> ID:</strong>
+                        ${testimonialId.substring(0, 8)}...
+                    </div>
+                    <div class="stat-item">
+                        <strong><i class="fas fa-user"></i> Autor:</strong>
+                        ${author}
+                    </div>
+                    <div class="stat-item">
+                        <strong><i class="fas fa-tag"></i> Categoría:</strong>
+                        ${category}
+                    </div>
+                    <div class="stat-item">
+                        <strong><i class="fas fa-photo-video"></i> Multimedia:</strong>
+                        ${detectedMediaType}
+                    </div>
+                    <div class="stat-item">
+                        <strong><i class="fas fa-file-code"></i> Tamaño HTML:</strong>
+                        ${htmlCodeTextarea.value.length.toLocaleString()} chars
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.log('No se pudieron extraer todos los datos:', error);
+                statsElement.innerHTML = `
+                    <div class="stat-item">
+                        <strong><i class="fas fa-file-code"></i> Tamaño HTML:</strong>
+                        ${htmlCodeTextarea.value.length.toLocaleString()} caracteres
+                    </div>
+                `;
+            }
+        }
+        
+        // Obtener estadísticas adicionales del testimonio
+        async function getTestimonialStats(testimonialId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/testimonials/${testimonialId}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Agregar estadísticas de engagement si están disponibles
+                    if (data.engagement) {
+                        const engagementStats = `
+                            <div class="stat-item">
+                                <strong><i class="fas fa-eye"></i> Vistas:</strong>
+                                ${data.engagement.views}
+                            </div>
+                            <div class="stat-item">
+                                <strong><i class="fas fa-link"></i> Embeds:</strong>
+                                ${data.engagement.embeds}
+                            </div>
+                        `;
+                        statsElement.innerHTML += engagementStats;
+                    }
+                }
+            } catch (error) {
+                // Silenciar error, no es crítico para la funcionalidad principal
+                console.log('No se pudieron obtener estadísticas adicionales:', error);
+            }
+        }
+        
+        // Copiar código al portapapeles
         function copyToClipboard() {
-            const text = elements.textarea.value.trim();
-            if (!text) {
-                showMessage('No hay código para copiar', 'error');
+            const html = htmlCodeTextarea.value.trim();
+            
+            if (!html) {
+                showMessage('❌ No hay código para copiar', 'error');
                 return;
             }
-            navigator.clipboard.writeText(text)
-                .then(() => showMessage('Copiado al portapapeles', 'success'))
-                .catch(() => showMessage('Error al copiar', 'error'));
+            
+            navigator.clipboard.writeText(html).then(() => {
+                showMessage('✅ Código copiado al portapapeles', 'success');
+            }).catch(err => {
+                showMessage(`❌ Error al copiar: ${err.message}`, 'error');
+            });
         }
         
+        // Limpiar todo
         function clearCode() {
-            elements.textarea.value = '';
-            elements.preview.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 40px 20px;"><i class="fas fa-code fa-3x"></i><br>Vista previa</p>';
-            elements.stats.innerHTML = '';
-            showMessage('Limpiado', 'success');
+            htmlCodeTextarea.value = '';
+            previewContainer.innerHTML = `
+                <div style="text-align: center; color: #94a3b8; padding: 60px 20px;">
+                    <i class="fas fa-code fa-3x" style="margin-bottom: 20px;"></i>
+                    <h3 style="margin-bottom: 15px;">Vista previa del testimonio</h3>
+                    <p>El testimonio aparecerá aquí cuando obtengas y renderices el código HTML</p>
+                </div>`;
+            codeDisplay.textContent = '';
+            statsElement.innerHTML = '';
+            clearMessages();
+            showMessage('✅ Todo limpiado', 'success');
         }
         
+        // Cambiar entre vista previa y código
         function toggleView() {
             if (currentView === 'preview') {
-                elements.code.style.display = 'block';
-                elements.preview.style.display = 'none';
+                codeDisplay.style.display = 'block';
+                previewContainer.style.display = 'none';
                 currentView = 'code';
+                viewToggleText.textContent = 'Ver Vista Previa';
             } else {
-                elements.code.style.display = 'none';
-                elements.preview.style.display = 'block';
+                codeDisplay.style.display = 'none';
+                previewContainer.style.display = 'block';
                 currentView = 'preview';
+                viewToggleText.textContent = 'Ver Código HTML';
             }
         }
         
-        // Inicializar con ejemplo
-        document.addEventListener('DOMContentLoaded', () => {
-            elements.textarea.value = `<div style="padding: 30px; text-align: center; color: #475569;">
-                <i class="fas fa-code fa-3x" style="color: #4f46e5; margin-bottom: 20px;"></i>
-                <h3>Test Embed - Testimonios CMS</h3>
-                <p>Pega código HTML o usa un ID para comenzar</p>
-            </div>`;
+        // ========== INICIALIZACIÓN ==========
+        
+        // Cargar código de ejemplo al inicio
+        function loadExampleCode() {
+            const exampleHtml = `<div class="testimonial-embed" 
+     data-testimonial-id="example-id-1234" 
+     data-testimonial-title="Ejemplo de testimonio"
+     data-media-type="none"
+     data-author="Usuario de Ejemplo"
+     data-category="demo"
+     style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 500px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin: 0 auto; overflow: hidden;">
+    
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px;">
+            E
+        </div>
+        <div>
+            <h3 style="margin: 0 0 5px 0; font-size: 18px; color: #1e293b; font-weight: 600;">
+                Usuario de Ejemplo
+            </h3>
+            <p style="margin: 0; color: #64748b; font-size: 14px;">
+                Cargo Ejemplo • Empresa Demo
+            </p>
+        </div>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+        <p style="font-size: 15px; line-height: 1.6; color: #475569; font-style: italic; border-left: 3px solid #4f46e5; padding-left: 15px;">
+            "Este es un ejemplo de cómo se vería un testimonio. Usa un ID real de tu API para ver contenido real."
+        </p>
+    </div>
+    
+    <div style="border-top: 1px solid #f1f5f9; padding-top: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #94a3b8;">
+        <span>🔗 Generado con Testimonios CMS</span>
+        <span>📅 ${new Date().toLocaleDateString('es-ES')}</span>
+    </div>
+</div>`;
+            
+            htmlCodeTextarea.value = exampleHtml;
+            showMessage('✅ Ejemplo cargado. Prueba con un ID real de tu API.', 'success');
+        }
+        
+        // Inicializar cuando cargue la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar ejemplo después de 1 segundo
+            setTimeout(loadExampleCode, 1000);
+            
+            // Permitir pegar con Ctrl+V en el textarea
+            htmlCodeTextarea.addEventListener('paste', function(e) {
+                setTimeout(() => {
+                    showMessage('✅ HTML pegado. Haz clic en "Renderizar HTML" para verlo.', 'success');
+                }, 100);
+            });
+            
+            // Tecla Enter en el input para obtener código
+            testimonialIdInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    getEmbedCode();
+                }
+            });
+            
+            console.log('🚀 Probador de Embeds cargado correctamente');
+            console.log('🌐 API Base URL:', API_BASE_URL);
         });
     </script>
+    
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
