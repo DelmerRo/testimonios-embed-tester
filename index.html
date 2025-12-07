@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Embed - Testimonios CMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ESTILOS SIMPLIFICADOS PARA GITHUB PAGES */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { font-size: 2rem; margin-bottom: 10px; }
+        .main-content { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+        @media (max-width: 768px) { .main-content { grid-template-columns: 1fr; } }
+        .input-section, .output-section { padding: 30px; }
+        .input-section { background: #f8fafc; border-right: 1px solid #e2e8f0; }
+        textarea, input { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; margin: 10px 0; font-family: 'Courier New', monospace; }
+        textarea { height: 250px; resize: vertical; }
+        button { background: #4f46e5; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; margin: 5px; font-weight: 600; }
+        button:hover { background: #4338ca; }
+        .preview-container { border: 2px solid #e2e8f0; border-radius: 8px; padding: 20px; min-height: 300px; background: white; margin: 20px 0; }
+        .error { background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #dc2626; }
+        .success { background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #059669; }
+        .loading { text-align: center; padding: 20px; color: #64748b; }
+        .stats { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+        .stat-item { background: #f1f5f9; padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; }
+        .footer { text-align: center; padding: 20px; background: #f1f5f9; color: #64748b; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-code"></i> Test Embed - Testimonios CMS</h1>
+            <p>Prueba tus embeds con HTTPS para evitar CORS</p>
+            <p style="font-size: 0.9rem; margin-top: 10px; background: rgba(255,255,255,0.2); padding: 5px; border-radius: 5px;">
+                <i class="fas fa-shield-alt"></i> HTTPS activo - Sin problemas CORS
+            </p>
+        </div>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <h2><i class="fas fa-keyboard"></i> Obtener Código</h2>
+                <div class="instructions" style="background: #e0e7ff; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                    <p><strong>Instrucciones:</strong></p>
+                    <ol style="margin-left: 20px;">
+                        <li>Pega un ID de testimonio</li>
+                        <li>Obtén el código HTML</li>
+                        <li>Pégalo abajo</li>
+                        <li>Vélo renderizado</li>
+                    </ol>
+                </div>
+                
+                <label><i class="fas fa-id-card"></i> ID del Testimonio:</label>
+                <div style="display: flex; gap: 10px; margin: 10px 0;">
+                    <input type="text" id="testimonialId" placeholder="Ej: d21055bc-2a35-4658-9ce9-8cd7971b05d0">
+                    <button onclick="getEmbedCode()"><i class="fas fa-download"></i> Obtener</button>
+                    <button onclick="openManualUrl()" style="background: #f59e0b;"><i class="fas fa-external-link-alt"></i> Abrir URL</button>
+                </div>
+                
+                <label><i class="fas fa-code"></i> HTML del Embed:</label>
+                <textarea id="htmlCode" placeholder="Pega el código HTML aquí..."></textarea>
+                <div>
+                    <button onclick="renderHtml()"><i class="fas fa-play"></i> Renderizar HTML</button>
+                    <button onclick="copyToClipboard()" style="background: #10b981;"><i class="far fa-copy"></i> Copiar</button>
+                    <button onclick="clearCode()" style="background: #ef4444;"><i class="fas fa-trash"></i> Limpiar</button>
+                </div>
+            </div>
+            
+            <div class="output-section">
+                <h2><i class="fas fa-eye"></i> Vista Previa</h2>
+                <div class="loading" id="loading" style="display: none;">
+                    <i class="fas fa-spinner fa-spin"></i> Cargando...
+                </div>
+                <div id="errorMessage" class="error" style="display: none;"></div>
+                <div id="successMessage" class="success" style="display: none;"></div>
+                <button onclick="toggleView()" style="background: #64748b; width: 100%; margin: 10px 0;">
+                    <i class="fas fa-exchange-alt"></i> Cambiar Vista
+                </button>
+                <div id="codeDisplay" style="display: none; background: #1e293b; color: white; padding: 15px; border-radius: 8px; font-family: monospace; max-height: 300px; overflow: auto;"></div>
+                <div id="previewContainer" class="preview-container">
+                    <p style="text-align: center; color: #94a3b8; padding: 40px 20px;">
+                        <i class="fas fa-code fa-3x" style="margin-bottom: 15px;"></i><br>
+                        La vista previa aparecerá aquí
+                    </p>
+                </div>
+                <div class="stats" id="stats"></div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><i class="fas fa-globe"></i> Alojado en GitHub Pages con HTTPS</p>
+            <p>API: <code>https://nocountry-cms.onrender.com/api/v1/public</code></p>
+        </div>
+    </div>
+
+    <script>
+        // ========== CONFIGURACIÓN ==========
+        const API_BASE_URL = 'https://nocountry-cms.onrender.com/api/v1/public';
+        let currentView = 'preview';
+        
+        // ========== ELEMENTOS DOM ==========
+        const elements = {
+            loading: document.getElementById('loading'),
+            error: document.getElementById('errorMessage'),
+            success: document.getElementById('successMessage'),
+            preview: document.getElementById('previewContainer'),
+            code: document.getElementById('codeDisplay'),
+            textarea: document.getElementById('htmlCode'),
+            stats: document.getElementById('stats'),
+            input: document.getElementById('testimonialId')
+        };
+        
+        // ========== FUNCIONES ==========
+        function isValidUUID(uuid) {
+            return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(uuid);
+        }
+        
+        function showLoading(show) {
+            elements.loading.style.display = show ? 'block' : 'none';
+        }
+        
+        function showMessage(text, type) {
+            elements.error.style.display = 'none';
+            elements.success.style.display = 'none';
+            
+            const element = type === 'error' ? elements.error : elements.success;
+            element.innerHTML = text;
+            element.style.display = 'block';
+            
+            if (type === 'success') {
+                setTimeout(() => element.style.display = 'none', 5000);
+            }
+        }
+        
+        function openManualUrl() {
+            const id = elements.input.value.trim();
+            if (!id || !isValidUUID(id)) {
+                showMessage('Ingresa un ID válido', 'error');
+                return;
+            }
+            window.open(`${API_BASE_URL}/embeds/${id}/code`, '_blank');
+            showMessage('URL abierta en nueva pestaña. Copia el HTML y pégalo arriba.', 'success');
+        }
+        
+        async function getEmbedCode() {
+            const id = elements.input.value.trim();
+            if (!id || !isValidUUID(id)) {
+                showMessage('ID inválido. Formato: 8-4-4-4-12 caracteres hex', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/embeds/${id}/code`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const html = await response.text();
+                elements.textarea.value = html;
+                renderHtml();
+                showMessage(`Código obtenido para: ${id}`, 'success');
+            } catch (error) {
+                showMessage(`Error: ${error.message}. Usa "Abrir URL" para copiar manualmente.`, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        function renderHtml() {
+            const html = elements.textarea.value.trim();
+            if (!html) {
+                showMessage('No hay código para renderizar', 'error');
+                return;
+            }
+            
+            elements.preview.innerHTML = '';
+            elements.code.textContent = html;
+            
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            div.style.maxWidth = '100%';
+            div.style.margin = '0 auto';
+            elements.preview.appendChild(div);
+            
+            if (currentView === 'code') toggleView();
+            extractInfo(div);
+            showMessage('HTML renderizado', 'success');
+        }
+        
+        function extractInfo(element) {
+            try {
+                const embed = element.querySelector('.testimonial-embed');
+                if (!embed) return;
+                
+                const info = {
+                    id: embed.dataset.testimonialId || 'N/A',
+                    author: embed.dataset.author || 'N/A',
+                    title: embed.dataset.testimonialTitle || 'N/A',
+                    category: embed.dataset.category || 'N/A'
+                };
+                
+                elements.stats.innerHTML = `
+                    <div class="stat-item">ID: ${info.id.substring(0, 8)}...</div>
+                    <div class="stat-item">Autor: ${info.author}</div>
+                    <div class="stat-item">Categoría: ${info.category}</div>
+                    <div class="stat-item">Tamaño: ${elements.textarea.value.length} chars</div>
+                `;
+            } catch (e) {
+                console.log('Error extrayendo info:', e);
+            }
+        }
+        
+        function copyToClipboard() {
+            const text = elements.textarea.value.trim();
+            if (!text) {
+                showMessage('No hay código para copiar', 'error');
+                return;
+            }
+            navigator.clipboard.writeText(text)
+                .then(() => showMessage('Copiado al portapapeles', 'success'))
+                .catch(() => showMessage('Error al copiar', 'error'));
+        }
+        
+        function clearCode() {
+            elements.textarea.value = '';
+            elements.preview.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 40px 20px;"><i class="fas fa-code fa-3x"></i><br>Vista previa</p>';
+            elements.stats.innerHTML = '';
+            showMessage('Limpiado', 'success');
+        }
+        
+        function toggleView() {
+            if (currentView === 'preview') {
+                elements.code.style.display = 'block';
+                elements.preview.style.display = 'none';
+                currentView = 'code';
+            } else {
+                elements.code.style.display = 'none';
+                elements.preview.style.display = 'block';
+                currentView = 'preview';
+            }
+        }
+        
+        // Inicializar con ejemplo
+        document.addEventListener('DOMContentLoaded', () => {
+            elements.textarea.value = `<div style="padding: 30px; text-align: center; color: #475569;">
+                <i class="fas fa-code fa-3x" style="color: #4f46e5; margin-bottom: 20px;"></i>
+                <h3>Test Embed - Testimonios CMS</h3>
+                <p>Pega código HTML o usa un ID para comenzar</p>
+            </div>`;
+        });
+    </script>
+</body>
+</html>
